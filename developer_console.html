@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面相识人 · 数据后台</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Microsoft YaHei',Arial,sans-serif;background:#f6f7fb;color:#2b2b2b;}
+.hd{background:#111827;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
+.hd h1{font-size:18px;}
+.hd .live{font-size:12px;color:#34d399;font-weight:700;}
+.wrap{max-width:960px;margin:0 auto;padding:18px 16px 60px;}
+/* 登录 */
+.login{max-width:360px;margin:60px auto;background:#fff;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.08);padding:26px;}
+.login h2{font-size:17px;margin-bottom:16px;color:#111827;}
+.login input{width:100%;padding:11px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;margin-bottom:12px;}
+.login button{width:100%;padding:11px;background:#111827;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;}
+.login .err{color:#dc2626;font-size:12px;margin-top:8px;min-height:16px;}
+/* 统计卡 */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0;}
+.scard{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.scard .num{font-size:26px;font-weight:800;color:#111827;}
+.scard .lab{font-size:12px;color:#6b7280;margin-top:4px;}
+/* 维度均值 */
+.traits{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:16px;}
+.traits h3{font-size:14px;color:#374151;margin-bottom:12px;}
+.tbar{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.tbar .name{width:56px;font-size:13px;color:#4b5563;font-weight:700;}
+.tbar .track{flex:1;height:14px;background:#f3f4f6;border-radius:7px;overflow:hidden;}
+.tbar .fill{height:100%;background:linear-gradient(90deg,#f97316,#ef4444);border-radius:7px;transition:width .5s;}
+.tbar .val{width:44px;font-size:13px;color:#111827;font-weight:700;text-align:right;}
+/* 表 */
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+th,td{padding:9px 12px;text-align:left;font-size:13px;border-bottom:1px solid #f3f4f6;}
+th{background:#f9fafb;color:#6b7280;font-weight:700;}
+td.ph{font-family:monospace;color:#7c3aed;font-weight:700;}
+.hide{display:none;}
+.passkey{font-size:11px;color:#9ca3af;margin-bottom:12px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="hd"><h1>🔮 面相识人 · 数据后台</h1><div class="live" id="live">未连接</div></div>
+<div class="wrap">
+  <div class="login" id="loginBox">
+    <h2>开发者验证</h2>
+    <input type="password" id="pass" placeholder="输入开发者口令">
+    <button onclick="doLogin()">进入后台</button>
+    <div class="err" id="err"></div>
+    <div class="passkey">提示：口令默认 <b>mx_admin_826</b>，可在云函数 index.js 中修改 ADMIN_PASS。</div>
+  </div>
+  <div id="panel" class="hide">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+      <button onclick="doReset()" style="background:#dc2626;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;">🗑 清空测试数据</button>
+    </div>
+    <div class="stats" id="statsRow"></div>
+    <div class="traits" id="traitsBox"></div>
+    <h3 style="font-size:14px;color:#374151;margin:8px 2px;">最近评分</h3>
+    <table id="recentTable"><thead><tr><th>照片</th><th>顾客</th><th>魅力</th><th>气场</th><th>亲和</th><th>强势</th><th>气质</th><th>时间</th></tr></thead><tbody id="recentBody"></tbody></table>
+  </div>
+</div>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.9.1/cloudbase.full.js"></script>
+<script>
+const app=cloudbase.init({env:'mianxiang-d4ghkv4tq11f8c31b'});
+let timer=null;
+async function callApi(route,q){const r=await app.callFunction({name:'api',data:{route:route,q:q||{},body:{}}});return r.result;}
+function $(id){return document.getElementById(id);}
+async function doLogin(){
+  const pass=$("pass").value.trim();
+  if(!pass){$("err").textContent="请输入口令";return;}
+  const r=await callApi('/api/admin_stats',{pass});
+  if(!r.ok){$("err").textContent="口令错误或服务异常";return;}
+  $("loginBox").classList.add("hide");$("panel").classList.remove("hide");
+  $("live").textContent="● 实时";
+  refresh();timer=setInterval(refresh,8000);
+}
+async function refresh(){
+  const pass=$("pass").value.trim();
+  const r=await callApi('/api/admin_stats',{pass});
+  if(!r.ok)return;
+  const p=r.progress,s=r.stats,t=r.perTrait;
+  const cards=[
+    ["照片池",p.pool],["累计评分",p.ratings],["参与人数",s.participants],
+    ["已解锁(3人)",p.locked],["待评分次数",p.need],["排序局数",s.rankings]
+  ];
+  $("statsRow").innerHTML=cards.map(([lab,num])=>'<div class="scard"><div class="num">'+num+'</div><div class="lab">'+lab+'</div></div>').join("");
+  const tb=[["魅力吸引力",t.attractiveness],["气场/专业感",t.competence],["亲和/可信",t.trustworthiness],["强势感",t.aggressiveness]];
+  $("traitsBox").innerHTML='<h3>评分维度均值（样本 '+t.n+'）</h3>'+tb.map(([name,val])=>{
+    const pct=(val/5*100).toFixed(0);
+    return '<div class="tbar"><div class="name">'+name+'</div><div class="track"><div class="fill" style="width:'+pct+'%"></div></div><div class="val">'+val+'</div></div>';
+  }).join("");
+  const rr=await callApi('/api/admin_recent',{pass,limit:15});
+  $("recentBody").innerHTML=(rr.rows||[]).map(x=>'<tr><td class="ph">'+x.photo+'</td><td>'+x.uid+'</td><td>'+x.attractiveness+'</td><td>'+x.competence+'</td><td>'+x.trustworthiness+'</td><td>'+x.aggressiveness+'</td><td>'+x.anchor+'</td><td>'+x.ts+'</td></tr>').join("")||'<tr><td colspan="8" style="text-align:center;color:#9ca3af;">暂无评分</td></tr>';
+}
+async function doReset(){
+  if(!confirm('确定清空所有评分数据吗？此操作不可恢复！将删除全部评分、排序记录，并把照片计数归零。')) return;
+  const pass=$('pass').value.trim();
+  const r=await callApi('/api/admin_reset',{pass});
+  if(r.ok){alert('已清空。当前：'+r.progress.ratings+' 条评分 / '+r.stats.participants+' 人');refresh();}
+  else alert('清空失败：口令失效或服务异常');
+}
+app.auth().signInAnonymously().catch(()=>{});
+</script>
+</body>
+</html>
