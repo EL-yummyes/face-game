@@ -48,7 +48,7 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;background:linear-gradient(1
 .num.on{background:linear-gradient(90deg,#fb923c,#ef4444);color:#fff;border-color:transparent;}
 .trait .tends{display:flex;justify-content:space-between;font-size:11px;color:#a58a6a;margin-top:5px;}
 .anchors{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:4px 0 8px;}
-.anchor{border:1.5px solid #f3d9b0;background:#fff;border-radius:26px;padding:3px 10px;font-size:11px;color:#7c5a2e;cursor:pointer;transition:.15s;}
+.anchor{border:1.5px solid #f3d9b0;background:#fff;border-radius:26px;padding:6px 12px;font-size:12px;color:#7c5a2e;cursor:pointer;transition:.15s;}
 .anchor.on{background:linear-gradient(90deg,#fb923c,#ef4444);color:#fff;border-color:transparent;font-weight:700;}
 .btnrow{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:12px;padding-top:4px;}
 .gbtn{flex:0 1 46%;border:none;border-radius:30px;padding:16px 0;font-size:16px;font-weight:700;cursor:pointer;min-height:60px;}
@@ -148,7 +148,7 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;background:linear-gradient(1
 <script src="https://el-yummyes.github.io/face-game/Sortable.min.js"></script>
 <script>
 const PHOTO_BASE="https://EL-yummyes.github.io/face-game/photos/";
-const ANCHORS=["🧊 高冷","🧑‍🏫 学者气","😄 亲和力","🔥 强势","🤓 书卷气","😎 精明","🧔 稳重","🕵️‍♀️ 神秘","🌞 阳光","💪 干练"];
+const ANCHORS=["🧊 高冷","🧑‍🏫 学者气","😄 亲和力","🔥 强势","🤓 书卷气","😎 精明","🧔 稳重","🕵️‍♀️ 神秘","🌞 阳光","💪 干练","🕊️ 温和","🎓 儒雅","🐺 锐利","😌 沉静","🎈 活泼","🏔️ 大气","👀 专注","🤝 真诚","🌸 温婉","✨ 睿智"];
 const TRAITS=[["魅力","普通","迷人"],["气场","青涩","专家"],["亲和","疏离","可信"],["强势","温和","压人"]];
 let uid=localStorage.getItem("facer_uid")||("u"+Date.now().toString(36)+Math.random().toString(36).slice(2,8));
 localStorage.setItem("facer_uid",uid);
