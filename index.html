@@ -153,6 +153,7 @@ localStorage.setItem("facer_uid",uid);
 let cur={}, score={}, anchors=new Set(), doneInBatch=0, BATCH=10;
 let rankPhotos=[], servedSet=new Set(), skipGuard=0;
 let batchPhotos=[], queue=[], refilling=false, sorter=null;
+let submitting=false, skipping=false;
 const app=cloudbase.init({env:'mianxiang-d4ghkv4tq11f8c31b'});
 async function callApi(route,q,body){
   const res=await app.callFunction({name:'api',data:{route:route,q:q||{},body:body||{}}});
@@ -247,12 +248,23 @@ async function doNext(){ // 评分/跳过成功后才前进
 }
 function reset(){score={};buildAttrs();buildAnchors();$("subBtn").disabled=true;}
 async function submit(){
+  if(submitting||skipping) return; submitting=true;
+  const sb=$("subBtn"); sb.disabled=true; sb.textContent="记录中…";
   const payload={path:cur.path,uid,attract:score["魅力"]||0,compet:score["气场"]||0,trust:score["亲和"]||0,aggress:score["强势"]||0,
                  anchor:[...anchors].join("、"),elapsed:0,ts:new Date().toISOString()};
-  const r=await callApi('/api/submit',{},payload);
+  let r;
+  try{ r=await callApi('/api/submit',{},payload); }
+  catch(e){ submitting=false; sb.disabled=false; sb.textContent="记录印象 →"; toast("网络开小差了，再试一次"); return; }
+  submitting=false;
   if(r.ok){toast(comment(score["魅力"],score["气场"],score["亲和"],score["强势"]));await doNext();}else{toast("这张你已经评过啦～");await doNext();}
 }
-async function skip(){toast("跳过～");await doNext();}
+async function skip(){
+  if(submitting||skipping) return; skipping=true;
+  $("subBtn").disabled=true;
+  toast("跳过～");
+  await doNext();
+  skipping=false;
+}
 function comment(a,c,t,g){
   if(a>=4&&g<=2)return "颜值与温柔并存，你是懂第一印象的 ✨";
   if(c>=4)return "你特别看中'能不能镇住场'，很有管理视角 💼";
