@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>面相识人 · 第一印象研究所</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{font-family:'Microsoft YaHei',Arial,sans-serif;background:linear-gradient(160deg,#fff7ed 0%,#fef3c7 35%,#ffedd5 70%,#ffe4e6 100%);color:#3b2f2f;}
+.wrap{max-width:720px;margin:0 auto;min-height:100%;padding:12px 14px calc(12px + env(safe-area-inset-bottom));}
+.hide{display:none !important;}
+.cover{text-align:center;margin:auto;min-height:calc(100vh - 24px);display:flex;flex-direction:column;justify-content:center;align-items:center;font-family:'STKaiti','KaiTi','楷体','Noto Serif SC',serif;}
+.cover .logo{font-size:44px;margin-bottom:6px;}
+.cover h1{font-size:46px;letter-spacing:7px;background:linear-gradient(100deg,#ea580c,#ef4444 40%,#db2777 80%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;font-family:inherit;}
+.cpop{opacity:0;transform:translateY(16px) scale(.96);}
+.cpop.on{animation:popIn .9s cubic-bezier(.2,.8,.25,1) forwards;}
+@keyframes popIn{0%{opacity:0;transform:translateY(16px) scale(.96);}60%{opacity:1;}100%{opacity:1;transform:none;}}
+.cline1{font-size:18px;color:#c2410c;letter-spacing:2px;margin:14px 0 6px;font-weight:700;}
+.cline2{font-size:24px;color:#b45309;letter-spacing:3px;font-weight:800;}
+.csub{font-size:12px;color:#a58a6a;margin-top:20px;letter-spacing:1px;}
+.cbtn{background:linear-gradient(90deg,#f97316,#ef4444);color:#fff;border:none;border-radius:40px;padding:12px 42px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(249,115,22,.35);margin-top:20px;font-family:'Microsoft YaHei',Arial,sans-serif;}
+.landing{text-align:center;margin:auto;width:100%;}
+.landing .logo{font-size:40px;margin-bottom:4px;}
+.tagline{font-size:14px;color:#b45309;font-weight:700;margin-bottom:12px;line-height:1.6;}
+.mission{background:#fff;border:1px solid #fcd9a8;border-radius:14px;padding:14px 16px;text-align:left;font-size:13px;line-height:1.8;color:#6b4f2e;margin-bottom:14px;}
+.mission b{color:#c2410c;}
+.poolinfo{font-size:12px;color:#a58a6a;margin-bottom:16px;line-height:1.6;}
+.startbtn{background:linear-gradient(90deg,#f97316,#ef4444);color:#fff;border:none;border-radius:40px;padding:13px 44px;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(249,115,22,.35);}
+.rule{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px;font-size:11px;color:#a58a6a;}
+.rule span{background:#fff;border:1px solid #f3d9b0;border-radius:18px;padding:5px 11px;}
+/* 紧凑任务卡：一屏看全，无需滚动 */
+.card{background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(180,83,9,.14);padding:14px;text-align:center;}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.top .p{font-size:12px;color:#a58a6a;font-weight:700;}
+.top .bar{flex:1;margin:0 10px;height:8px;background:#fde8d0;border-radius:6px;overflow:hidden;}
+.top .bar i{display:block;height:100%;background:linear-gradient(90deg,#fb923c,#ef4444);border-radius:6px;transition:width .3s;}
+.top .n{font-size:12px;color:#b45309;font-weight:700;}
+.photobox{text-align:center;margin:6px 0;}
+.photo{width:min(74vw,320px);aspect-ratio:1/1;object-fit:cover;border-radius:14px;border:3px solid #fff;box-shadow:0 6px 18px rgba(0,0,0,.14);display:block;margin:0 auto;background:#fde8d0;transition:opacity .25s ease;}
+.q{font-size:13px;color:#7c5a2e;margin:4px 0 4px;font-weight:700;}
+.hint2{font-size:11px;color:#c4a9a9;margin:0 0 4px;line-height:1.5;}
+.trait{border:1px solid #f3d9b0;border-radius:10px;padding:8px 12px;margin-bottom:9px;text-align:left;}
+.trait .tname{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:#7c5a2e;margin-bottom:6px;}
+.trait .v{color:#ef4444;font-weight:700;}
+.scale{display:flex;align-items:center;justify-content:space-between;margin-top:2px;}
+.num{width:30px;height:30px;flex:none;border-radius:50%;border:1.5px solid #f3d9b0;background:#fff;color:#7c5a2e;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s;}
+.num.on{background:linear-gradient(90deg,#fb923c,#ef4444);color:#fff;border-color:transparent;}
+.trait .tends{display:flex;justify-content:space-between;font-size:11px;color:#a58a6a;margin-top:5px;}
+.anchors{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:4px 0 8px;}
+.anchor{border:1.5px solid #f3d9b0;background:#fff;border-radius:26px;padding:6px 12px;font-size:12px;color:#7c5a2e;cursor:pointer;transition:.15s;}
+.anchor.on{background:linear-gradient(90deg,#fb923c,#ef4444);color:#fff;border-color:transparent;font-weight:700;}
+.btnrow{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:12px;padding-top:4px;}
+.gbtn{flex:0 1 46%;border:none;border-radius:30px;padding:16px 0;font-size:16px;font-weight:700;cursor:pointer;min-height:60px;}
+.btnrow .gbtn:only-child{margin-left:auto;margin-right:auto;flex:0 1 auto;min-width:62%;}
+.gprimary{background:linear-gradient(90deg,#f97316,#ef4444);color:#fff;box-shadow:0 6px 18px rgba(249,115,22,.3);}
+.ghost{background:#fff;color:#a58a6a;border:1px solid #f3d9b0;}
+.gprimary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;}
+/* 排序页：竖向可拖拽列表 */
+.rank{background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(180,83,9,.14);padding:14px;text-align:center;width:100%;}
+.rank .btnrow{position:sticky;bottom:0;background:linear-gradient(0deg,#fff7ed 55%,rgba(255,247,237,0));padding:8px 0 2px;z-index:3;}
+.rank h2{font-size:20px;color:#c2410c;margin:4px 0;}
+.rank .sub{font-size:13px;color:#7c5a2e;margin-bottom:6px;line-height:1.5;}
+.rank .hint{font-size:11px;color:#a58a6a;margin-bottom:10px;}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 12px;}
+.rface{position:relative;border:3px solid #f3d9b0;border-radius:12px;overflow:hidden;background:#fde8d0;cursor:grab;}
+.rface img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;}
+.rface .badge{position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:linear-gradient(90deg,#fb923c,#ef4444);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;z-index:2;}
+.rface .grip{position:absolute;bottom:4px;right:4px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;background:rgba(0,0,0,.35);border-radius:8px;}
+.rface.ghost{opacity:.4;border-style:dashed;}
+.done{text-align:center;margin:auto;width:100%;position:relative;padding:20px 6px;}
+.done .emoji{font-size:52px;animation:bounce 1.1s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.done h2{font-size:26px;margin:8px 0;color:#c2410c;}
+.done .thanks{font-size:16px;color:#7c5a2e;line-height:1.7;margin:8px 0;}
+.done .elev{font-family:'STKaiti','KaiTi',serif;font-size:15px;color:#b45309;line-height:1.9;background:#fff7ed;border:1px dashed #fcd9a8;border-radius:14px;padding:12px 14px;margin:12px 0;}
+.done .persona-tag{display:inline-block;background:linear-gradient(90deg,#fb923c,#ef4444);color:#fff;border-radius:30px;padding:8px 22px;font-size:15px;font-weight:800;margin:6px 0;}
+.done .share{font-size:12px;color:#a58a6a;line-height:1.6;margin-bottom:14px;}
+/* 飘落彩带动画 */
+.confetti{position:fixed;top:-20px;width:10px;height:10px;border-radius:2px;opacity:0;z-index:5;pointer-events:none;animation:fall linear forwards;}
+@keyframes fall{0%{opacity:1;transform:translateY(0) rotate(0deg);}100%{opacity:0;transform:translateY(105vh) rotate(720deg);}}
+.toast{position:fixed;left:50%;bottom:36px;transform:translateX(-50%) translateY(20px);background:#3b2f2f;color:#fff;border-radius:14px;padding:12px 20px;font-size:14px;opacity:0;transition:.3s;z-index:9;max-width:88%;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="cover" id="cover">
+    <div class="logo">🔮</div>
+    <h1>面相识人</h1>
+    <div class="cline1 cpop">「相由心生，面为心镜」</div>
+    <div class="cline2 cpop">面相<br>会不会悄悄影响一个人？</div>
+    <div class="csub cpop">—— 一场关于「第一印象」的实验 ——</div>
+    <button class="cbtn cpop" onclick="gotoIntro()">翻开下一页 ✨</button>
+  </div>
+  <div class="landing hide" id="landing">
+    <div class="logo">🔮</div>
+    <div class="tagline">「眉宇之间皆是故事」——</div>
+    <div class="mission">
+      面相学里说，一张脸藏着一个人的气场、亲和、强势与魅力，<b>眉宇之间皆是故事</b>。<br><br>
+      现在，请你当一回「第一印象大师」：<br>
+      凭第一印象，给屏幕上的陌生人评 <b>4 个维度</b>——<b>魅力 / 气场 / 亲和 / 强势</b>。<br><br>
+      你的每一票，都会被科学家用来训练 AI，<b>解开「面相」之谜</b>。
+    </div>
+    <div class="poolinfo" id="poolinfo"></div>
+    <button class="startbtn" onclick="start()">开始第一印象测试</button>
+    <div class="rule">
+      <span>⚡ 凭直觉，别犹豫</span><span>🧠 没有对错，第一印象</span><span>🚀 评完转发，凑够 3 人解锁真相</span>
+    </div>
+  </div>
+  <div class="card hide" id="card">
+    <div class="top">
+      <div class="p">本轮</div><div class="bar"><i id="bar"></i></div><div class="n" id="cnt">0/10</div>
+    </div>
+    <div class="photobox"><img class="photo" id="photo" src="" alt="照片"></div>
+    <div class="q">凭第一印象，这个人……</div>
+    <div class="hint2">下面 4 个维度，都凭你的第一印象打 1-5 分——没有对错，跟着直觉</div>
+    <div class="attrs" id="attrs"></div>
+    <div class="q">ta 更像哪种气质？（可多选）</div>
+    <div class="anchors" id="anchors"></div>
+    <div class="btnrow">
+      <button class="gbtn ghost" onclick="skip()">这张跳过</button>
+      <button class="gbtn gprimary" id="subBtn" onclick="submit()" disabled>记录印象 →</button>
+    </div>
+  </div>
+  <div class="rank hide" id="rank">
+    <div class="top"><div class="p">面相大挑战</div><div class="n" id="rankCnt">0/0</div></div>
+    <h2>谁的面相更有气场？</h2>
+    <div class="sub">把你刚评过的 <b id="rankN">10</b> 个人，按【气场】从强到弱排个序——<br>气场最强的放最前面，最弱的放最后面。</div>
+    <div class="hint">👆 长按任意方格，拖到你想放的位置</div>
+    <div class="rgrid" id="rgrid"></div>
+    <div class="btnrow">
+      <button class="gbtn gprimary" id="rankBtn" onclick="rankSubmit()">确认排序 →</button>
+    </div>
+  </div>
+  <div class="done hide" id="done">
+    <div class="emoji">🎉</div>
+    <h2>本轮完成！</h2>
+    <div class="persona-tag" id="persona"></div>
+    <div class="thanks" id="thanksText"></div>
+    <div class="elev">「第一印象，是人与人之间最诚实的一场邂逅。」<br>你的直觉，正在为科学添上一笔独特的注脚。</div>
+    <div class="share" id="shareText"></div>
+    <button class="gbtn gprimary" onclick="start()">再来一轮 🔁</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.9.1/cloudbase.full.js"></script>
+<script src="https://el-yummyes.github.io/face-game/Sortable.min.js"></script>
+<script>
+const PHOTO_BASE="https://EL-yummyes.github.io/face-game/photos/";
+const ANCHORS=["🧊 高冷","🧑‍🏫 学者气","😄 亲和力","🔥 强势","🤓 书卷气","😎 精明","🧔 稳重","🕵️‍♀️ 神秘","🌞 阳光","💪 干练","🕊️ 温和","🎓 儒雅","🐺 锐利","😌 沉静","🎈 活泼","🏔️ 大气","👀 专注","🤝 真诚","🌸 温婉","✨ 睿智"];
+const TRAITS=[["魅力","普通","迷人"],["气场","青涩","专家"],["亲和","疏离","可信"],["强势","温和","压人"]];
+let uid=localStorage.getItem("facer_uid")||("u"+Date.now().toString(36)+Math.random().toString(36).slice(2,8));
+localStorage.setItem("facer_uid",uid);
+let cur={}, score={}, anchors=new Set(), doneInBatch=0, BATCH=10;
+let rankPhotos=[], servedSet=new Set(), skipGuard=0;
+let batchPhotos=[], queue=[], refilling=false, sorter=null;
+let submitting=false, skipping=false;
+const app=cloudbase.init({env:'mianxiang-d4ghkv4tq11f8c31b'});
+async function callApi(route,q,body){
+  const res=await app.callFunction({name:'api',data:{route:route,q:q||{},body:body||{}}});
+  return res.result;
+}
+function $(id){return document.getElementById(id);}
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2000);}
+function buildAttrs(){
+  $("attrs").innerHTML="";
+  TRAITS.forEach(([label,lo,hi])=>{
+    const d=document.createElement("div");d.className="trait";
+    d.innerHTML='<div class="tname"><span>'+label+'</span><span class="v" id="'+label+'v">?</span></div>'+
+      '<div class="scale" id="scale-'+label+'"></div>'+
+      '<div class="tends"><span>'+lo+'</span><span>'+hi+'</span></div>';
+    $("attrs").appendChild(d);
+    const sc=d.querySelector(".scale");
+    for(let i=1;i<=5;i++){
+      const b=document.createElement("button");b.className="num";b.textContent=i;
+      b.onclick=()=>{score[label]=i;sc.querySelectorAll(".num").forEach(x=>x.classList.remove("on"));b.classList.add("on");$('#'+label+'v').textContent=i;checkReady();};
+      sc.appendChild(b);
+    }
+  });
+}
+function buildAnchors(){
+  $("anchors").innerHTML="";anchors=new Set();
+  ANCHORS.forEach(a=>{const b=document.createElement("button");b.className="anchor";b.textContent=a;
+    b.onclick=()=>{if(anchors.has(a)){anchors.delete(a);b.classList.remove("on");}else{anchors.add(a);b.classList.add("on");}checkReady();};
+    $("anchors").appendChild(b);});
+}
+function checkReady(){
+  const full=TRAITS.every(([label])=>score[label]&&score[label]>=1);
+  $("subBtn").disabled=!full;
+}
+async function init(){
+  try{
+    const s=await callApi('/api/progress');
+    const pool=s.progress.pool, locked=s.progress.locked, cust=(s.stats.participants||0)+1;
+    $("poolinfo").innerHTML="研究所已接入 "+pool+" 张照片 · 已满 3 人解锁 "+locked+" 张 · 欢迎你成为第 "+cust+" 位顾客";
+  }catch(e){$("poolinfo").textContent="研究所正在准备中，请稍后…";}
+  runCover();
+}
+function runCover(){
+  const pops=document.querySelectorAll("#cover .cpop");
+  pops.forEach((el,i)=>{el.classList.remove("on");setTimeout(()=>el.classList.add("on"),400+i*650);});
+}
+function gotoIntro(){
+  $("cover").classList.add("hide");$("landing").classList.remove("hide");
+}
+// —— 预取队列：后台提前拉下一张照片，切图即时不卡 ——
+async function pullOne(){
+  for(let tries=0;tries<6;tries++){
+    const d=await callApi('/api/next',{uid:uid});
+    if(!d||d.empty)return null;
+    if(!servedSet.has(d.path)){servedSet.add(d.path);return d;}
+  }
+  return null;
+}
+async function refill(){
+  if(refilling) return; refilling=true;
+  try{
+    while(queue.length<1){
+      const d=await pullOne();
+      if(!d)break;
+      const im=new Image(); im.src=PHOTO_BASE+d.path+".jpg";
+      queue.push({path:d.path,img:im});
+    }
+  }catch(e){} finally{refilling=false;}
+}
+async function takeOne(){
+  if(queue.length){
+    const it=queue.shift(); cur=it; batchPhotos.push(it.path);
+    showPhoto(it.img.src); refill();
+  }else{
+    const d=await pullOne();
+    if(!d||d.empty){ await startRank(); return; }
+    cur=d; batchPhotos.push(d.path); showPhoto(PHOTO_BASE+d.path+".jpg");
+  }
+  window.scrollTo(0,0);
+  reset();
+}
+function showPhoto(src){const p=$("photo");p.style.opacity=0;p.onload=()=>{p.style.opacity=1;};p.src=src;}
+async function start(){
+  $("cover").classList.add("hide");$("landing").classList.add("hide");$("done").classList.add("hide");$("rank").classList.add("hide");$("card").classList.remove("hide");
+  doneInBatch=0;batchPhotos=[];queue=[];buildAttrs();buildAnchors();$("bar").style.width="0%";$("cnt").textContent="0/"+BATCH;
+  await refill();
+  await takeOne();
+}
+async function doNext(){ // 评分/跳过成功后才前进
+  doneInBatch++;
+  $("bar").style.width=(doneInBatch/BATCH*100)+"%";$("cnt").textContent=doneInBatch+"/"+BATCH;
+  if(doneInBatch>=BATCH){ await startRank(); return; }
+  await takeOne();
+}
+function reset(){score={};buildAttrs();buildAnchors();$("subBtn").disabled=true;}
+async function submit(){
+  if(submitting||skipping) return; submitting=true;
+  const sb=$("subBtn"); sb.disabled=true; sb.textContent="记录中…";
+  const payload={path:cur.path,uid,attract:score["魅力"]||0,compet:score["气场"]||0,trust:score["亲和"]||0,aggress:score["强势"]||0,
+                 anchor:[...anchors].join("、"),elapsed:0,ts:new Date().toISOString()};
+  let r;
+  try{ r=await callApi('/api/submit',{},payload); }
+  catch(e){ submitting=false; sb.disabled=false; sb.textContent="记录印象 →"; toast("网络开小差了，再试一次"); return; }
+  submitting=false;
+  if(r.ok){toast(comment(score["魅力"],score["气场"],score["亲和"],score["强势"]));await doNext();}else{toast("这张你已经评过啦～");await doNext();}
+}
+async function skip(){
+  if(submitting||skipping) return; skipping=true;
+  $("subBtn").disabled=true;
+  toast("跳过～");
+  await doNext();
+  skipping=false;
+}
+function comment(a,c,t,g){
+  if(a>=4&&g<=2)return "颜值与温柔并存，你是懂第一印象的 ✨";
+  if(c>=4)return "你特别看中'能不能镇住场'，很有管理视角 💼";
+  if(t>=4)return "你觉得'可信'比什么都重要——安全感选手 🤝";
+  if(g>=4)return "你欣赏强势脸，喜欢有攻击性的气场 🔥";
+  if(a>=4)return "你有点颜控哦，不丢人 😏";
+  if(t<=2)return "你总觉得别人信不过？严苛评审员 😤";
+  return "印象已记录，直觉最准 ⚡";
+}
+// —— 排序小游戏：本轮评过的 N 人，拖拽排序 ——
+async function startRank(){
+  rankPhotos=batchPhotos.slice(); const n=rankPhotos.length;
+  if(sorter){try{sorter.destroy();}catch(e){}} sorter=null;
+  $("card").classList.add("hide");$("rank").classList.remove("hide");
+  $("rankN").textContent=n; $("rankCnt").textContent="0/"+n;
+  const g=$("rgrid"); g.innerHTML="";
+  rankPhotos.forEach((ph,idx)=>{
+    const f=document.createElement("div"); f.className="rface"; f.dataset.path=ph;
+    f.innerHTML='<img src="'+PHOTO_BASE+ph+'.jpg" alt=""><span class="badge">'+(idx+1)+'</span><span class="grip">⠿</span>';
+    g.appendChild(f);
+  });
+  $("rankBtn").disabled=false;
+  sorter=Sortable.create(g,{animation:150,ghostClass:'ghost',onEnd:renumber});
+}
+function renumber(){
+  const items=[...$("rgrid").children];
+  items.forEach((f,i)=>{ f.querySelector(".badge").textContent=i+1; });
+  $("rankCnt").textContent=items.length+"/"+items.length;
+}
+async function rankSubmit(){
+  const order=[...$("rgrid").children].map(f=>f.dataset.path);
+  const payload={uid,trait:"气场",order,ts:new Date().toISOString()};
+  const r=await callApi('/api/rank_submit',{},payload);
+  if(r.ok)toast("排序已记录，谢谢你 🔥");
+  await finish();
+}
+async function finish(){
+  $("rank").classList.add("hide");$("done").classList.remove("hide");
+  const s=await callApi('/api/progress');
+  const avg=((s.stats.participants||0)<=1)?0:((s.progress.ratings||0)/((s.stats.participants||0)-1));
+  let persona="第一印象大师";
+  if(avg>=4)persona="慧眼识人"; else if(avg>=3)persona="直觉先行者"; else persona="第一印象新星";
+  $("persona").textContent="✨ "+persona;
+  $("thanksText").textContent="你完成了 "+doneInBatch+" 张评分 + 1 轮面相排序。作为第 "+((s.stats.participants||0))+" 位顾客，感谢你的直觉参与！";
+  $("shareText").textContent="把这个页面发给朋友，一起解开'面相'之谜——每张照片集满 3 位顾客的观点，就会解锁。";
+  confetti();
+}
+function confetti(){
+  const colors=["#f97316","#ef4444","#facc15","#22c55e","#3b82f6","#db2777"];
+  for(let i=0;i<36;i++){
+    const c=document.createElement("div");c.className="confetti";
+    c.style.left=(Math.random()*100)+"vw";c.style.background=colors[i%colors.length];
+    c.style.animationDuration=(2.4+Math.random()*1.6)+"s";c.style.animationDelay=(Math.random()*0.6)+"s";
+    c.style.width=(6+Math.random()*8)+"px";c.style.height=c.style.width;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+app.auth().signInAnonymously().then(()=>{ init(); }).catch(e=>{ $("poolinfo").textContent="登录中，请稍后刷新…"; runCover(); });
+</script>
+</body>
+</html>
